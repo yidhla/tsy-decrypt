@@ -15,10 +15,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq python3-tk
-          pip install pyinstaller -q
+          sudo apt-get install -y -qq python3-tk patchelf squashfs-tools
+          pip install pyinstaller staticx -q
       - name: Build
-        run: pyinstaller --onefile --clean --name tsy-decrypt tsy_decrypt_gui.py
+        run: |
+          pyinstaller --onefile --clean --name tsy-decrypt tsy_decrypt_gui.py
+          staticx dist/tsy-decrypt dist/tsy-decrypt
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
