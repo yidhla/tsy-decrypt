@@ -9,21 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up QEMU for ARM64
         uses: docker/setup-qemu-action@v3
-
       - name: Build with PyInstaller
         run: |
           docker run --platform linux/arm64 -v $PWD:/work \
-            python:3.8-slim bash -c "
-            apt-get update -qq && \
-            apt-get install -y -qq python3-tk && \
-            pip install pyinstaller -q && \
-            cd /work && \
-            python -m PyInstaller --onefile --clean --name tsy-decrypt tsy_decrypt_gui.py
-          "
-
+            python:3.8-slim bash -c \
+            "apt-get update -qq && apt-get install -y -qq python3-tk && \
+             pip install pyinstaller -q && \
+             cd /work && python -m PyInstaller --onefile --clean --name tsy-decrypt tsy_decrypt_gui.py"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
