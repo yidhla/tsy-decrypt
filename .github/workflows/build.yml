@@ -1,0 +1,28 @@
+name: Build ARM64
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU for ARM64
+        uses: docker/setup-qemu-action@v3
+
+      - name: Build with PyInstaller
+        run: |
+          docker run --platform linux/arm64 -v $PWD:/work python:3.8-slim bash -c "
+            pip install pyinstaller && \
+            cd /work && \
+            python -m PyInstaller --onefile --clean --name tsy-decrypt tsy_decrypt_gui.py
+          "
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tsy-decrypt-arm64
+          path: dist/tsy-decrypt
