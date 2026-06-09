@@ -15,8 +15,11 @@ jobs:
 
       - name: Build with PyInstaller
         run: |
-          docker run --platform linux/arm64 -v $PWD:/work python:3.8-slim bash -c "
-            pip install pyinstaller && \
+          docker run --platform linux/arm64 -v $PWD:/work \
+            python:3.8-slim bash -c "
+            apt-get update -qq && \
+            apt-get install -y -qq python3-tk && \
+            pip install pyinstaller -q && \
             cd /work && \
             python -m PyInstaller --onefile --clean --name tsy-decrypt tsy_decrypt_gui.py
           "
