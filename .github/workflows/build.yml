@@ -7,15 +7,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-24.04-arm
-    container:
-      image: arm64v8/ubuntu:20.04
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
       - name: Install dependencies
         run: |
-          DEBIAN_FRONTEND=noninteractive apt-get update -qq
-          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3 python3-pip python3-tk
-          pip3 install pyinstaller -q
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq python3-tk
+          pip install pyinstaller -q
       - name: Build
         run: pyinstaller --onefile --clean --name tsy-decrypt tsy_decrypt_gui.py
       - name: Upload artifact
